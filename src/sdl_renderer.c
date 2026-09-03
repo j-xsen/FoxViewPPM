@@ -9,6 +9,7 @@ int initialize_renderer(CustomRenderer *renderer, const char *window_title,
   renderer->screen_width = window_width;
   renderer->screen_height = window_height;
   renderer->render_flags = flags;
+  renderer->zoom = 1.0f;
 
   if (!SDL_Init(SDL_INIT_VIDEO)) {
     // In the case that the SDL failed to initialize ...
@@ -49,8 +50,14 @@ int initialize_renderer(CustomRenderer *renderer, const char *window_title,
 }
 
 void draw(CustomRenderer *renderer) {
+  SDL_FRect dst;
+  dst.w = get_width() * renderer->zoom;
+  dst.h = get_height() * renderer->zoom;
+  dst.x = (renderer->screen_width - dst.w) / 2.0f;
+  dst.y = (renderer->screen_height - dst.h) / 2.0f;
+
   SDL_RenderClear(renderer->renderer);
-  SDL_RenderTexture(renderer->renderer, image_texture, NULL, NULL);
+  SDL_RenderTexture(renderer->renderer, image_texture, NULL, &dst);
   SDL_RenderPresent(renderer->renderer);
 }
 

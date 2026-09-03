@@ -12,7 +12,12 @@ typedef struct {
   int screen_width;
   int screen_height;
   Uint32 render_flags;
+  float zoom;
 } CustomRenderer;
+
+#define ZOOM_MIN 0.1f
+#define ZOOM_MAX 10.0f
+#define ZOOM_STEP 0.1f
 
 int initialize_renderer(CustomRenderer *renderer, const char *window_title,
                         const int window_width, const int window_height,

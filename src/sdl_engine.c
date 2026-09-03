@@ -32,6 +32,13 @@ void process_input(SDLEngine* engine) {
           engine->is_running = 0;
         }
         break;
+      case SDL_EVENT_MOUSE_WHEEL: {
+        float zoom = engine->renderer.zoom + engine->event.wheel.y * ZOOM_STEP;
+        if (zoom < ZOOM_MIN) zoom = ZOOM_MIN;
+        if (zoom > ZOOM_MAX) zoom = ZOOM_MAX;
+        engine->renderer.zoom = zoom;
+        break;
+      }
       default:
         break;
     }
