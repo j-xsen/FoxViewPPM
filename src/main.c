@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#include <SDL3/SDL_main.h>
+
 #include "ppm.h"
 #include "sdl_engine.h"
 
