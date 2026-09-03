@@ -10,6 +10,8 @@ int initialize_renderer(CustomRenderer *renderer, const char *window_title,
   renderer->screen_height = window_height;
   renderer->render_flags = flags;
   renderer->zoom = 1.0f;
+  renderer->pan_x = 0.0f;
+  renderer->pan_y = 0.0f;
 
   if (!SDL_Init(SDL_INIT_VIDEO)) {
     // In the case that the SDL failed to initialize ...
@@ -53,8 +55,21 @@ void draw(CustomRenderer *renderer) {
   SDL_FRect dst;
   dst.w = get_width() * renderer->zoom;
   dst.h = get_height() * renderer->zoom;
-  dst.x = (renderer->screen_width - dst.w) / 2.0f;
-  dst.y = (renderer->screen_height - dst.h) / 2.0f;
+
+  float max_pan_x = (dst.w > renderer->screen_width)
+                         ? (dst.w - renderer->screen_width) / 2.0f
+                         : 0.0f;
+  float max_pan_y = (dst.h > renderer->screen_height)
+                         ? (dst.h - renderer->screen_height) / 2.0f
+                         : 0.0f;
+
+  if (renderer->pan_x > max_pan_x) renderer->pan_x = max_pan_x;
+  if (renderer->pan_x < -max_pan_x) renderer->pan_x = -max_pan_x;
+  if (renderer->pan_y > max_pan_y) renderer->pan_y = max_pan_y;
+  if (renderer->pan_y < -max_pan_y) renderer->pan_y = -max_pan_y;
+
+  dst.x = (renderer->screen_width - dst.w) / 2.0f + renderer->pan_x;
+  dst.y = (renderer->screen_height - dst.h) / 2.0f + renderer->pan_y;
 
   SDL_RenderClear(renderer->renderer);
   SDL_RenderTexture(renderer->renderer, image_texture, NULL, &dst);

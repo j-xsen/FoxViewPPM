@@ -13,6 +13,8 @@ typedef struct {
   int screen_height;
   Uint32 render_flags;
   float zoom;
+  float pan_x;
+  float pan_y;
 } CustomRenderer;
 
 #define ZOOM_MIN 0.1f

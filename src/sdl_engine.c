@@ -2,6 +2,7 @@
 
 int initialize_engine(SDLEngine* engine, const char* title) {
   engine->is_running = 1;
+  engine->is_dragging = 0;
 
   int result = initialize_renderer(&engine->renderer, title, get_width(),
                                    get_height(), SDL_WINDOW_OPENGL);
@@ -39,6 +40,22 @@ void process_input(SDLEngine* engine) {
         engine->renderer.zoom = zoom;
         break;
       }
+      case SDL_EVENT_MOUSE_BUTTON_DOWN:
+        if (engine->event.button.button == SDL_BUTTON_LEFT) {
+          engine->is_dragging = 1;
+        }
+        break;
+      case SDL_EVENT_MOUSE_BUTTON_UP:
+        if (engine->event.button.button == SDL_BUTTON_LEFT) {
+          engine->is_dragging = 0;
+        }
+        break;
+      case SDL_EVENT_MOUSE_MOTION:
+        if (engine->is_dragging) {
+          engine->renderer.pan_x += engine->event.motion.xrel;
+          engine->renderer.pan_y += engine->event.motion.yrel;
+        }
+        break;
       default:
         break;
     }
